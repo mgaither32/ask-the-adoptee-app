@@ -108,6 +108,12 @@ export default function Home() {
   const endRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
+  const [captureEmail, setCaptureEmail] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailDone, setEmailDone] = useState(false);
+  const [lastResponse, setLastResponse] = useState("");
   const inChat = messages.length > 0;
 
   useEffect(() => {
@@ -127,8 +133,17 @@ export default function Home() {
         body: JSON.stringify({ messages: next }),
       });
       const d = await r.json();
-      if (d.message)
+      if (d.message) {
         setMessages([...next, { role: "assistant" as const, content: d.message }]);
+        setLastResponse(d.message);
+        setQuestionCount(prev => {
+          const newCount = prev + 1;
+          if (newCount === 3 && !emailDone) {
+            setTimeout(() => setShowEmailCapture(true), 800);
+          }
+          return newCount;
+        });
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -139,7 +154,24 @@ export default function Home() {
   const startOver = () => {
     setMessages([]);
     setInput("");
+    setQuestionCount(0);
+    setShowEmailCapture(false);
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  };
+
+  const submitEmail = async () => {
+    if (!captureEmail.trim() || emailLoading) return;
+    setEmailLoading(true);
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: captureEmail.trim(), response: lastResponse }),
+      });
+    } catch (e) { console.error(e); }
+    setEmailLoading(false);
+    setEmailDone(true);
+    setShowEmailCapture(false);
   };
 
   if (showAbout) return <AboutPage onBack={() => setShowAbout(false)} />;
@@ -156,6 +188,7 @@ export default function Home() {
         maxWidth: "600px",
         margin: "0 auto",
         overflow: "hidden",
+        position: "relative",
       }}
     >
       <header
@@ -423,6 +456,84 @@ export default function Home() {
         )}
       </div>
 
+      {/* Email capture overlay */}
+      {showEmailCapture && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: "rgba(44,24,16,0.97)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "32px 28px",
+            zIndex: 100,
+          }}
+        >
+          <p style={{ fontSize: "13px", color: "#C4922A", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "20px" }}>
+            Before you go
+          </p>
+          <p style={{ fontSize: "21px", lineHeight: "1.8", color: "#F5EFE8", marginBottom: "12px" }}>
+            You're asking real questions. Let me send you what we just talked about so you have it when you need it.
+          </p>
+          <p style={{ fontSize: "16px", color: "rgba(245,239,232,0.55)", lineHeight: "1.6", marginBottom: "32px" }}>
+            I'll also send you my free guide — the first five signs your child is carrying something they haven't told you.
+          </p>
+          <input
+            type="email"
+            placeholder="Your email address"
+            value={captureEmail}
+            onChange={(e) => setCaptureEmail(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") submitEmail(); }}
+            style={{
+              width: "100%",
+              backgroundColor: "rgba(245,239,232,0.06)",
+              color: "#F5EFE8",
+              border: "1.5px solid rgba(196,146,42,0.45)",
+              borderRadius: "10px",
+              padding: "14px 18px",
+              fontSize: "19px",
+              fontFamily: "Georgia, serif",
+              marginBottom: "14px",
+              outline: "none",
+            }}
+          />
+          <button
+            onClick={submitEmail}
+            disabled={emailLoading || !captureEmail.trim()}
+            style={{
+              width: "100%",
+              backgroundColor: captureEmail.trim() && !emailLoading ? "#C4922A" : "rgba(196,146,42,0.2)",
+              color: captureEmail.trim() && !emailLoading ? "#2C1810" : "rgba(245,239,232,0.3)",
+              border: "none",
+              borderRadius: "10px",
+              padding: "16px",
+              fontSize: "19px",
+              fontWeight: "bold",
+              fontFamily: "Georgia, serif",
+              cursor: captureEmail.trim() && !emailLoading ? "pointer" : "not-allowed",
+              marginBottom: "16px",
+            }}
+          >
+            {emailLoading ? "Sending..." : "Send it to me"}
+          </button>
+          <button
+            onClick={() => setShowEmailCapture(false)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "rgba(245,239,232,0.35)",
+              fontSize: "15px",
+              fontFamily: "Georgia, serif",
+              cursor: "pointer",
+              textAlign: "center",
+              padding: "8px",
+            }}
+          >
+            No thanks
+          </button>
+        </div>
+      )}
       <div
         style={{
           flexShrink: 0,
