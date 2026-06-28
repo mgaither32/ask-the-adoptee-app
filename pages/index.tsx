@@ -232,7 +232,7 @@ export default function Home() {
                   background: "none",
                   border: "none",
                   color: "#C4922A",
-                  fontSize: "14px",
+                  fontSize: "16px",
                   cursor: "pointer",
                   fontFamily: "Georgia, serif",
                   padding: "0",
