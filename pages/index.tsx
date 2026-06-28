@@ -106,6 +106,7 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState(0);
   const [showAbout, setShowAbout] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const startRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [questionCount, setQuestionCount] = useState(0);
@@ -117,31 +118,52 @@ export default function Home() {
   const inChat = messages.length > 0;
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const last = messages[messages.length - 1];
+    if (last && last.role === "assistant") {
+      startRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      endRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages, loading]);
 
   const send = async () => {
     if (!input.trim() || loading || questionCount >= 3) return;
     const userMsg = { role: "user" as const, content: input.trim() };
     const next = [...messages, userMsg];
-    setMessages(next);
+    setMessages([...next, { role: "assistant" as const, content: "" }]);
     setInput("");
     setLoading(true);
     try {
-      const d = await fetch("/api/ask", {
+      const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next }),
-      }).then((r) => r.json());
-      if (d.message) {
-        setMessages([...next, { role: "assistant" as const, content: d.message }]);
-        setLastResponse(d.message);
-        setQuestionCount((prev) => {
-          const n = prev + 1;
-          if (n === 3 && !emailDone) setTimeout(() => setShowEmailCapture(true), 800);
-          return n;
-        });
+      });
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        for (const line of chunk.split("\n")) {
+          if (line.startsWith("data: ") && !line.includes("[DONE]")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.text) {
+                fullText += data.text;
+                setMessages([...next, { role: "assistant" as const, content: fullText }]);
+              }
+            } catch {}
+          }
+        }
       }
+      setLastResponse(fullText);
+      setQuestionCount((prev) => {
+        const n = prev + 1;
+        if (n === 3 && !emailDone) setTimeout(() => setShowEmailCapture(true), 800);
+        return n;
+      });
     } catch (e) {
       console.error(e);
     }
@@ -379,7 +401,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                <div key={i} ref={i === messages.length - 1 ? startRef : null} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
                   <div
                     style={{
                       width: "34px",
