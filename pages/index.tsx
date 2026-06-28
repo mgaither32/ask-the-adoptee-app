@@ -103,6 +103,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showingIndicator, setShowingIndicator] = useState(false);
   const [activeCategory, setActiveCategory] = useState(0);
   const [showAbout, setShowAbout] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -133,6 +134,7 @@ export default function Home() {
     setMessages([...next, { role: "assistant" as const, content: "" }]);
     setInput("");
     setLoading(true);
+        setShowingIndicator(true);
     try {
       const response = await fetch("/api/ask", {
         method: "POST",
@@ -168,6 +170,7 @@ export default function Home() {
       console.error(e);
     }
     setLoading(false);
+    setTimeout(() => setShowingIndicator(false), 3000);
   };;
 
 ;
@@ -399,7 +402,7 @@ export default function Home() {
                     }}
                   >
                     {msg.content}
-                    {i === messages.length - 1 && loading && (
+                    {i === messages.length - 1 && showingIndicator && (
                       <div style={{ fontSize: "11px", color: "rgba(196,146,42,0.55)", fontStyle: "italic", marginTop: "8px", letterSpacing: "0.3px" }}>
                         Drawing from Michael&rsquo;s experience...
                       </div>
