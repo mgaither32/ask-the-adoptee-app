@@ -323,7 +323,7 @@ export default function Home() {
                   marginTop: "6px",
                 }}
               >
-                Common situations
+                Where parents usually start
               </p>
               {CATEGORIES[activeCategory].questions.map((q, i) => (
                 <button
@@ -339,13 +339,13 @@ export default function Home() {
                     backgroundColor: "rgba(255,255,255,0.04)",
                     border: "1px solid rgba(196,146,42,0.22)",
                     color: "#F5EFE8",
-                    padding: "16px 20px",
+                    padding: "10px 16px",
                     cursor: "pointer",
-                    fontSize: "19px",
+                    fontSize: "15px",
                     fontFamily: "Georgia, serif",
                     lineHeight: "1.7",
                     borderRadius: "8px",
-                    marginBottom: "10px",
+                    marginBottom: "5px",
                     minHeight: "56px",
                   }}
                 >
@@ -551,7 +551,7 @@ export default function Home() {
             ref={taRef}
             value={input}
             rows={inChat ? 2 : 3}
-            placeholder={inChat ? "Ask a follow-up..." : "Describe your situation here..."}
+            placeholder={inChat ? "Ask a follow-up..." : "Tell me what's going on..."}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
