@@ -258,6 +258,7 @@ export default function Home() {
                 <div style={{ fontSize: "11px", color: "#C4922A", letterSpacing: "1.5px", marginTop: "4px" }}>
                   by Michael Gaither &middot; Beyond the Moment Studio
                 </div>
+              <div style={{ fontSize: "10px", color: "rgba(245,239,232,0.45)", letterSpacing: "0.5px", marginTop: "3px", textAlign: "center" }}>AI powered by Michael Gaither's lived experience as a Black adoptee raised in a white family</div>
               </div>
             )}
           </div>
@@ -433,7 +434,7 @@ export default function Home() {
                         style={{
                           display: "inline-block",
                           color: "#C4922A",
-                          fontSize: "15px",
+                          fontSize: "18px",
                           fontWeight: "bold",
                           textDecoration: "none",
                           borderBottom: "1px solid #C4922A",
@@ -468,7 +469,7 @@ export default function Home() {
                   M
                 </div>
                 <span style={{ color: "#C4922A", fontSize: "17px", fontStyle: "italic" }}>
-                  Michael is responding&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;
+                  Drawing from Michael’s experience&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;
                 </span>
               </div>
             )}
