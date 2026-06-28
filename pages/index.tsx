@@ -124,47 +124,29 @@ export default function Home() {
     if (!input.trim() || loading || questionCount >= 3) return;
     const userMsg = { role: "user" as const, content: input.trim() };
     const next = [...messages, userMsg];
-    setMessages([...next, { role: "assistant" as const, content: "" }]);
+    setMessages(next);
     setInput("");
     setLoading(true);
     try {
-      const response = await fetch("/api/chat", {
+      const d = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next }),
-      });
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-      let fullText = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const lines = decoder.decode(value, { stream: true }).split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ") && line !== "data: [DONE]") {
-            try {
-              const d = JSON.parse(line.slice(6));
-              if (d.text) {
-                fullText += d.text;
-                setMessages(prev => [...prev.slice(0, -1), { role: "assistant" as const, content: fullText }]);
-              }
-            } catch {}
-          }
-        }
-      }
-      if (fullText) {
-        setLastResponse(fullText);
-        setQuestionCount(prev => {
+      }).then((r) => r.json());
+      if (d.message) {
+        setMessages([...next, { role: "assistant" as const, content: d.message }]);
+        setLastResponse(d.message);
+        setQuestionCount((prev) => {
           const n = prev + 1;
           if (n === 3 && !emailDone) setTimeout(() => setShowEmailCapture(true), 800);
           return n;
         });
       }
     } catch (e) {
-      setMessages(prev => [...prev.slice(0, -1), { role: "assistant" as const, content: "Something went wrong. Please try again." }]);
+      console.error(e);
     }
     setLoading(false);
-  };
+  };;
 
 ;
 
