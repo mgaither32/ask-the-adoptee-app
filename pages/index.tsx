@@ -368,6 +368,27 @@ export default function Home() {
                   </div>
                   <div style={{ flex: 1, fontSize: "20px", color: "#F5EFE8", lineHeight: "1.9" }}>
                     {parseContent(msg.content)}
+                    <div style={{ marginTop: "20px", paddingTop: "16px", borderTop: "1px solid rgba(196,146,42,0.25)" }}>
+                      <p style={{ fontSize: "15px", color: "rgba(245,239,232,0.75)", lineHeight: "1.7", marginBottom: "10px" }}>
+                        I wrote a practical guide for white parents raising Black children. Everything I wish someone had handed my parents.
+                      </p>
+                      <a
+                        href="https://payhip.com/b/hD5Qj"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "inline-block",
+                          color: "#C4922A",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                          borderBottom: "1px solid #C4922A",
+                          paddingBottom: "2px",
+                        }}
+                      >
+                        Get the guide &mdash; $17 &rarr;
+                      </a>
+                    </div>
                   </div>
                 </div>
               )
