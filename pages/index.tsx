@@ -305,7 +305,7 @@ export default function Home() {
                 &ldquo;{QUOTE}&rdquo;
               </p>
               <p style={{ fontSize: "13px", color: "#C4922A", letterSpacing: "0.3px" }}>
-                &mdash; Michael Gaither &nbsp;&middot;&nbsp; Black transracial adoptee &nbsp;&middot;&nbsp; reunited with biological family at 49
+                Michael Gaither &nbsp;&middot;&nbsp; Black transracial adoptee &nbsp;&middot;&nbsp; reunited with biological family at 49
               </p>
             </div>
 
@@ -399,6 +399,11 @@ export default function Home() {
                     }}
                   >
                     {msg.content}
+                    {i === messages.length - 1 && loading && (
+                      <div style={{ fontSize: "11px", color: "rgba(196,146,42,0.55)", fontStyle: "italic", marginTop: "8px", letterSpacing: "0.3px" }}>
+                        Drawing from Michael&rsquo;s experience...
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -428,7 +433,7 @@ export default function Home() {
                         I wrote a practical guide for white parents raising Black children. Everything I wish someone had handed my parents.
                       </p>
                       <a
-                        href="https://payhip.com/b/hD5Qj"
+                        href="https://payhip.com/beyondthemomentadoptionstudio"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -441,7 +446,7 @@ export default function Home() {
                           paddingBottom: "2px",
                         }}
                       >
-                        Give your child what I didn't have &mdash; $17 &rarr;
+                        Browse all my guides for white parents raising Black children &rarr;
                       </a>
                     </div>
                   </div>
