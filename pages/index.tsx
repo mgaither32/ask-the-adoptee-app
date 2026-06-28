@@ -544,7 +544,7 @@ export default function Home() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            send(input);
+            send();
           }}
         >
           <textarea
@@ -556,7 +556,7 @@ export default function Home() {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                send(input);
+                send();
               }
             }}
             style={{
