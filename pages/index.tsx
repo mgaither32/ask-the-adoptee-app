@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 const QUOTE =
-  "I was 49 years old before I knew what it felt like to look at someone and see myself.";
+  "I was your child. I know what you're missing. And I know it's not love.";
 
 const CATEGORIES = [
   {
