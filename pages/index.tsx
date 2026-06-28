@@ -144,7 +144,7 @@ export default function Home() {
       ta.removeEventListener("touchstart", onTouchStart);
       ta.removeEventListener("touchmove", onTouchMove);
     };
-  }, []);
+  }, [inChat]);
 
   const send = async () => {
     if (!input.trim() || loading || questionCount >= 3) return;
@@ -251,7 +251,7 @@ export default function Home() {
                   background: "none",
                   border: "none",
                   color: "#C4922A",
-                  fontSize: "16px",
+                  fontSize: "20px",
                   cursor: "pointer",
                   fontFamily: "Georgia, serif",
                   padding: "0",
@@ -601,7 +601,7 @@ export default function Home() {
           {inChat && (
             <button
               onClick={() => { setMessages([]); setInput(""); setLoading(false); setShowingIndicator(false); setQuestionCount(0); }}
-              style={{ background: "none", border: "none", color: "#C4922A", fontSize: "13px", cursor: "pointer", padding: "2px 0 10px", display: "block", fontFamily: "Georgia, serif", opacity: 0.75, letterSpacing: "0.3px" }}
+              style={{ background: "none", border: "none", color: "#C4922A", fontSize: "20px", cursor: "pointer", padding: "2px 0 10px", display: "block", fontFamily: "Georgia, serif", opacity: 0.75, letterSpacing: "0.3px" }}
             >
               ← Back to topics
             </button>
