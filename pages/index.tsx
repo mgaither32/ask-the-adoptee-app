@@ -126,25 +126,6 @@ export default function Home() {
       endRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, loading]);
-  useEffect(() => {
-    const ta = taRef.current;
-    const container = scrollRef.current;
-    if (!ta || !container) return;
-    let startY = 0;
-    const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
-    const onTouchMove = (e: TouchEvent) => {
-      const dy = startY - e.touches[0].clientY;
-      startY = e.touches[0].clientY;
-      e.preventDefault();
-      container.scrollTop = Math.max(0, container.scrollTop + dy);
-    };
-    ta.addEventListener("touchstart", onTouchStart, { passive: true });
-    ta.addEventListener("touchmove", onTouchMove, { passive: false });
-    return () => {
-      ta.removeEventListener("touchstart", onTouchStart);
-      ta.removeEventListener("touchmove", onTouchMove);
-    };
-  }, [inChat]);
 
   const send = async () => {
     if (!input.trim() || loading || questionCount >= 3) return;
@@ -222,7 +203,7 @@ export default function Home() {
   return (
     <div
       style={{
-        height: "100dvh",
+        minHeight: "100dvh",
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#2C1810",
@@ -230,7 +211,6 @@ export default function Home() {
         fontFamily: "Georgia, 'Times New Roman', serif",
         maxWidth: "600px",
         margin: "0 auto",
-        overflow: "hidden",
         position: "relative",
       }}
     >
@@ -308,8 +288,6 @@ export default function Home() {
         ref={scrollRef}
         style={{
           flex: 1,
-          overflowY: "auto",
-          WebkitOverflowScrolling: "touch",
           overscrollBehavior: "contain",
         }}
       >
@@ -679,6 +657,9 @@ function AboutPage({ onBack }: { onBack: () => void }) {
       <header
         style={{
           flexShrink: 0,
+          position: "sticky",
+          bottom: 0,
+          zIndex: 10,
           padding: "18px 24px 16px",
           borderBottom: "1px solid rgba(196,146,42,0.35)",
           display: "flex",
