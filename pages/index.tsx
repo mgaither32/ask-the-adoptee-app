@@ -136,7 +136,7 @@ export default function Home() {
       const dy = startY - e.touches[0].clientY;
       startY = e.touches[0].clientY;
       e.preventDefault();
-      container.scrollTop += dy;
+      container.scrollTop = Math.max(0, container.scrollTop + dy);
     };
     ta.addEventListener("touchstart", onTouchStart, { passive: true });
     ta.addEventListener("touchmove", onTouchMove, { passive: false });
