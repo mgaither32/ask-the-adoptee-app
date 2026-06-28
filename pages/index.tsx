@@ -291,6 +291,7 @@ export default function Home() {
           flex: 1,
           overflowY: "auto",
           WebkitOverflowScrolling: "touch",
+          overscrollBehavior: "contain",
         }}
       >
         {!inChat && (
@@ -578,12 +579,21 @@ export default function Home() {
             send();
           }}
         >
+          {inChat && (
+            <button
+              onClick={() => { setMessages([]); setInput(""); setLoading(false); setShowingIndicator(false); setQuestionCount(0); }}
+              style={{ background: "none", border: "none", color: "#C4922A", fontSize: "13px", cursor: "pointer", padding: "2px 0 10px", display: "block", fontFamily: "Georgia, serif", opacity: 0.75, letterSpacing: "0.3px" }}
+            >
+              ← Back to topics
+            </button>
+          )}
           <textarea
             ref={taRef}
             value={input}
             rows={inChat ? 2 : 3}
             placeholder={inChat ? "Ask a follow-up..." : "Tell me what's going on..."}
             onChange={(e) => setInput(e.target.value)}
+            onInput={(e) => { const el = e.currentTarget as HTMLTextAreaElement; el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 140) + "px"; }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -601,6 +611,8 @@ export default function Home() {
               fontFamily: "Georgia, serif",
               lineHeight: "1.65",
               resize: "none",
+              overflow: "hidden",
+              touchAction: "pan-y",
               display: "block",
               marginBottom: "10px",
               outline: "none",
