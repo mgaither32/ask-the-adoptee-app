@@ -126,6 +126,25 @@ export default function Home() {
       endRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, loading]);
+  useEffect(() => {
+    const ta = taRef.current;
+    const container = scrollRef.current;
+    if (!ta || !container) return;
+    let startY = 0;
+    const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
+    const onTouchMove = (e: TouchEvent) => {
+      const dy = startY - e.touches[0].clientY;
+      startY = e.touches[0].clientY;
+      e.preventDefault();
+      container.scrollTop += dy;
+    };
+    ta.addEventListener("touchstart", onTouchStart, { passive: true });
+    ta.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      ta.removeEventListener("touchstart", onTouchStart);
+      ta.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
 
   const send = async () => {
     if (!input.trim() || loading || questionCount >= 3) return;
