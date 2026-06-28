@@ -705,6 +705,20 @@ function AboutPage({ onBack }: { onBack: () => void }) {
 
       <div style={{ flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
         <div style={{ padding: "36px 24px 60px" }}>
+          <img
+            src="/BTM_headshot.jpg"
+            alt="Michael Gaither"
+            style={{
+              width: "120px",
+              height: "120px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              objectPosition: "center top",
+              display: "block",
+              margin: "0 auto 32px",
+              border: "3px solid #C4922A",
+            }}
+          />
           <p style={{ fontSize: "11px", color: "#C4922A", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "18px" }}>
             Who built this
           </p>
