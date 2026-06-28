@@ -309,9 +309,9 @@ export default function Home() {
                     color: "#F5EFE8",
                     padding: "16px 20px",
                     cursor: "pointer",
-                    fontSize: "16px",
+                    fontSize: "19px",
                     fontFamily: "Georgia, serif",
-                    lineHeight: "1.6",
+                    lineHeight: "1.7",
                     borderRadius: "8px",
                     marginBottom: "10px",
                     minHeight: "56px",
@@ -320,7 +320,7 @@ export default function Home() {
                   {q}
                 </button>
               ))}
-              <p style={{ fontSize: "14px", color: "rgba(245,239,232,0.35)", textAlign: "center", marginTop: "20px" }}>
+              <p style={{ fontSize: "16px", color: "rgba(245,239,232,0.35)", textAlign: "center", marginTop: "20px" }}>
                 Or type your own situation below
               </p>
             </div>
@@ -338,8 +338,8 @@ export default function Home() {
                       color: "#2C1810",
                       padding: "13px 17px",
                       borderRadius: "18px 18px 4px 18px",
-                      fontSize: "17px",
-                      lineHeight: "1.65",
+                      fontSize: "19px",
+                      lineHeight: "1.75",
                       maxWidth: "88%",
                     }}
                   >
@@ -366,7 +366,7 @@ export default function Home() {
                   >
                     M
                   </div>
-                  <div style={{ flex: 1, fontSize: "17px", color: "#F5EFE8" }}>
+                  <div style={{ flex: 1, fontSize: "20px", color: "#F5EFE8", lineHeight: "1.9" }}>
                     {parseContent(msg.content)}
                   </div>
                 </div>
@@ -392,7 +392,7 @@ export default function Home() {
                 >
                   M
                 </div>
-                <span style={{ color: "#C4922A", fontSize: "15px", fontStyle: "italic" }}>
+                <span style={{ color: "#C4922A", fontSize: "17px", fontStyle: "italic" }}>
                   Michael is responding&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&bull;
                 </span>
               </div>
@@ -454,7 +454,7 @@ export default function Home() {
               border: "none",
               borderRadius: "10px",
               padding: "15px",
-              fontSize: "17px",
+              fontSize: "19px",
               fontWeight: "bold",
               fontFamily: "Georgia, serif",
               cursor: !loading && input.trim() ? "pointer" : "not-allowed",
