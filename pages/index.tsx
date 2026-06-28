@@ -419,7 +419,7 @@ export default function Home() {
                           paddingBottom: "2px",
                         }}
                       >
-                        Get the guide &mdash; $17 &rarr;
+                        Give your child what I didn't have &mdash; $17 &rarr;
                       </a>
                     </div>
                   </div>
