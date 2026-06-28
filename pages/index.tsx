@@ -5,48 +5,69 @@ const QUOTE =
 
 const CATEGORIES = [
   {
-    id: "hair",
-    label: "Hair & Appearance",
+    id: "police",
+    label: "Police & Safety",
     questions: [
-      "How do I start learning to care for my child's hair properly?",
-      "Where do I find a barber or stylist who knows Black hair?",
-      "My child is embarrassed about their hair at school. What do I do?",
+      "My child is getting older and I am scared about their safety around police. How do I prepare them?",
+      "My child saw news about a Black person being killed by police. How do I talk about this?",
+      "I do not know how to explain to my child why police treat Black people differently. What do I say?",
+    ],
+  },
+  {
+    id: "racism",
+    label: "Race & Racism",
+    questions: [
+      "Someone said something racist to my child in public and I froze. What should I have done?",
+      "My child heard the N-word for the first time. How do I handle this?",
+      "My white family members make comments about my child's race. How do I address this?",
+      "My child is experiencing what I believe are microaggressions at school and the teachers do not see it.",
     ],
   },
   {
     id: "identity",
-    label: "Identity & Belonging",
+    label: "Identity & Shame",
     questions: [
-      "My child asked why they look different from me. What do I say?",
-      "How do I help my child feel like they truly belong in our family?",
-      "My child says they don't feel Black or white. How do I respond?",
+      "My child says they wish they were white. I do not know what to do with that.",
+      "My child seems embarrassed or ashamed about being Black. How do I address this?",
+      "My child is angry at me because I am white. How do I respond without getting defensive?",
+      "My child does not feel Black or white. They do not know where they belong.",
     ],
   },
   {
-    id: "race",
-    label: "Race & Racism",
-    questions: [
-      "My child came home saying kids made fun of their skin. How do I handle this?",
-      "How do I talk about racism when I have never experienced it personally?",
-      "My child does not want to talk about race at all. Should I push?",
-    ],
-  },
-  {
-    id: "culture",
+    id: "community",
     label: "Culture & Community",
     questions: [
-      "We live in a mostly white community. How does this affect my child?",
-      "How do I give my child real connections to Black culture?",
-      "My child wants to spend time with their biological family. How do I support that?",
+      "We live in a mostly white community. How much does this harm my child long term?",
+      "My child has no Black friends, mentors, or role models in daily life. Is this a serious problem?",
+      "My child is uncomfortable around other Black people and I do not understand why.",
+      "How do I build real connections to Black culture without it feeling like a performance?",
+    ],
+  },
+  {
+    id: "family",
+    label: "Biological Family",
+    questions: [
+      "My child wants to search for their biological family. How do I support this?",
+      "My child's birth family has come back into contact and it is affecting them emotionally.",
+      "My child asks questions about their birth parents that I cannot answer. What do I do?",
     ],
   },
   {
     id: "school",
     label: "School & Teachers",
     questions: [
-      "My child is the only Black student in their class. How do I help them navigate that?",
-      "A teacher described my child in a way that felt racially coded. What do I do?",
-      "My child's school has no Black teachers. Does that matter?",
+      "I think my child is being treated differently by teachers because of their race. What do I do?",
+      "My child was disciplined at school and I believe race played a role. How do I handle this?",
+      "My child comes home exhausted after school and cannot explain why. Could this be about race?",
+    ],
+  },
+  {
+    id: "hard",
+    label: "Hard Questions",
+    questions: [
+      "My child asked me why I adopted a Black child. What do I say?",
+      "My child asked if I see color. How do I answer honestly?",
+      "I realize I have not done enough to support my child's racial identity. How do I make up for lost time?",
     ],
   },
 ];
@@ -86,6 +107,7 @@ export default function Home() {
   const [showAbout, setShowAbout] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const inChat = messages.length > 0;
 
   useEffect(() => {
@@ -114,91 +136,108 @@ export default function Home() {
     }
   };
 
+  const startOver = () => {
+    setMessages([]);
+    setInput("");
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  };
+
   if (showAbout) return <AboutPage onBack={() => setShowAbout(false)} />;
 
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         backgroundColor: "#2C1810",
         color: "#F5EFE8",
         fontFamily: "Georgia, 'Times New Roman', serif",
+        maxWidth: "600px",
+        margin: "0 auto",
+        overflow: "hidden",
       }}
     >
-      <div
+      <header
         style={{
-          maxWidth: "600px",
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
+          flexShrink: 0,
+          padding: "18px 24px 16px",
+          borderBottom: "1px solid rgba(196,146,42,0.4)",
+          backgroundColor: "#2C1810",
         }}
       >
-        {/* Header */}
-        <header
-          style={{
-            padding: "18px 24px 16px",
-            borderBottom: "1px solid rgba(196,146,42,0.4)",
-            position: "sticky",
-            top: 0,
-            backgroundColor: "#2C1810",
-            zIndex: 20,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            {inChat ? (
+              <button
+                onClick={startOver}
                 style={{
-                  fontSize: "13px",
-                  fontWeight: "bold",
-                  letterSpacing: "3px",
-                  textTransform: "uppercase",
-                  color: "#F5EFE8",
-                }}
-              >
-                Ask the Adoptee
-              </div>
-              <div
-                style={{
-                  fontSize: "11px",
+                  background: "none",
+                  border: "none",
                   color: "#C4922A",
-                  letterSpacing: "1.5px",
-                  marginTop: "4px",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  fontFamily: "Georgia, serif",
+                  padding: "0",
+                  minHeight: "44px",
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "underline",
+                  textUnderlineOffset: "3px",
                 }}
               >
-                by Michael Gaither &middot; Beyond the Moment Studio
+                &larr; Back to topics
+              </button>
+            ) : (
+              <div>
+                <div
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: "bold",
+                    letterSpacing: "3px",
+                    textTransform: "uppercase",
+                    color: "#F5EFE8",
+                  }}
+                >
+                  Ask the Adoptee
+                </div>
+                <div style={{ fontSize: "11px", color: "#C4922A", letterSpacing: "1.5px", marginTop: "4px" }}>
+                  by Michael Gaither &middot; Beyond the Moment Studio
+                </div>
               </div>
-            </div>
-            <button
-              onClick={() => setShowAbout(true)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#C4922A",
-                fontSize: "14px",
-                cursor: "pointer",
-                padding: "8px",
-                minHeight: "44px",
-                fontFamily: "Georgia, serif",
-                textDecoration: "underline",
-                textUnderlineOffset: "3px",
-              }}
-            >
-              About
-            </button>
+            )}
           </div>
-        </header>
+          <button
+            onClick={() => setShowAbout(true)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#C4922A",
+              fontSize: "14px",
+              cursor: "pointer",
+              padding: "8px",
+              minHeight: "44px",
+              fontFamily: "Georgia, serif",
+              textDecoration: "underline",
+              textUnderlineOffset: "3px",
+            }}
+          >
+            About
+          </button>
+        </div>
+      </header>
 
-        {/* Welcome screen — only when no messages */}
+      <div
+        ref={scrollRef}
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
         {!inChat && (
           <>
-            {/* Michael's quote */}
-            <div
-              style={{
-                padding: "32px 24px 26px",
-                borderBottom: "1px solid rgba(196,146,42,0.2)",
-              }}
-            >
+            <div style={{ padding: "32px 24px 26px", borderBottom: "1px solid rgba(196,146,42,0.2)" }}>
               <p
                 style={{
                   fontSize: "19px",
@@ -215,7 +254,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Category pills */}
             <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", padding: "20px 24px 0" }}>
               <div style={{ display: "flex", gap: "8px", paddingBottom: "16px", width: "max-content" }}>
                 {CATEGORIES.map((cat, i) => (
@@ -242,8 +280,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Question cards */}
-            <div style={{ padding: "4px 24px 180px" }}>
+            <div style={{ padding: "4px 24px 32px" }}>
               <p
                 style={{
                   fontSize: "11px",
@@ -283,31 +320,15 @@ export default function Home() {
                   {q}
                 </button>
               ))}
-              <p
-                style={{
-                  fontSize: "14px",
-                  color: "rgba(245,239,232,0.35)",
-                  textAlign: "center",
-                  marginTop: "20px",
-                }}
-              >
+              <p style={{ fontSize: "14px", color: "rgba(245,239,232,0.35)", textAlign: "center", marginTop: "20px" }}>
                 Or type your own situation below
               </p>
             </div>
           </>
         )}
 
-        {/* Chat view — shows ONLY when there are messages */}
         {inChat && (
-          <div
-            style={{
-              flex: 1,
-              padding: "24px 24px 180px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "22px",
-            }}
-          >
+          <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "22px" }}>
             {messages.map((msg, i) =>
               msg.role === "user" ? (
                 <div key={i} style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -376,24 +397,17 @@ export default function Home() {
                 </span>
               </div>
             )}
-
             <div ref={endRef} />
           </div>
         )}
       </div>
 
-      {/* Fixed input at bottom */}
       <div
         style={{
-          position: "fixed",
-          bottom: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "100%",
-          maxWidth: "600px",
-          backgroundColor: "#2C1810",
+          flexShrink: 0,
           borderTop: "1px solid rgba(196,146,42,0.3)",
           padding: "14px 20px 32px",
+          backgroundColor: "#2C1810",
         }}
       >
         <form
@@ -405,7 +419,7 @@ export default function Home() {
           <textarea
             ref={taRef}
             value={input}
-            rows={3}
+            rows={inChat ? 2 : 3}
             placeholder={inChat ? "Ask a follow-up..." : "Describe your situation here..."}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -459,52 +473,53 @@ function AboutPage({ onBack }: { onBack: () => void }) {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         backgroundColor: "#2C1810",
         color: "#F5EFE8",
         fontFamily: "Georgia, serif",
+        maxWidth: "600px",
+        margin: "0 auto",
       }}
     >
-      <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-        <header
+      <header
+        style={{
+          flexShrink: 0,
+          padding: "18px 24px 16px",
+          borderBottom: "1px solid rgba(196,146,42,0.35)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#2C1810",
+        }}
+      >
+        <button
+          onClick={onBack}
           style={{
-            padding: "18px 24px 16px",
-            borderBottom: "1px solid rgba(196,146,42,0.35)",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            position: "sticky",
-            top: 0,
-            backgroundColor: "#2C1810",
-            zIndex: 20,
+            background: "none",
+            border: "none",
+            color: "#C4922A",
+            fontSize: "14px",
+            cursor: "pointer",
+            fontFamily: "Georgia, serif",
+            padding: "8px 0",
+            minHeight: "44px",
           }}
         >
-          <button
-            onClick={onBack}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#C4922A",
-              fontSize: "14px",
-              cursor: "pointer",
-              fontFamily: "Georgia, serif",
-              padding: "8px 0",
-              minHeight: "44px",
-            }}
-          >
-            &larr; Back
-          </button>
-          <div style={{ fontSize: "13px", fontWeight: "bold", letterSpacing: "3px", textTransform: "uppercase" }}>
-            About
-          </div>
-          <div style={{ width: "60px" }} />
-        </header>
+          &larr; Back
+        </button>
+        <div style={{ fontSize: "13px", fontWeight: "bold", letterSpacing: "3px", textTransform: "uppercase" }}>
+          About
+        </div>
+        <div style={{ width: "60px" }} />
+      </header>
 
+      <div style={{ flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
         <div style={{ padding: "36px 24px 60px" }}>
           <p style={{ fontSize: "11px", color: "#C4922A", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "18px" }}>
             Who built this
           </p>
-
           <p style={{ fontSize: "19px", lineHeight: "1.85", marginBottom: "22px" }}>
             My name is Michael Gaither. I am a Black transracial adoptee who was raised by a white family in Lincoln, Nebraska. I spent 30 years as a teacher and school principal. At 49 years old, I reunited with my biological family for the first time.
           </p>
@@ -514,16 +529,13 @@ function AboutPage({ onBack }: { onBack: () => void }) {
           <p style={{ fontSize: "19px", lineHeight: "1.85", marginBottom: "40px" }}>
             Ask the Adoptee exists because white parents raising Black children deserve more than books and good intentions. They deserve to be able to describe a real moment, at any hour of the day, and get guidance from someone who has been on the other side of it.
           </p>
-
           <div style={{ width: "100%", height: "1px", backgroundColor: "rgba(196,146,42,0.3)", marginBottom: "40px" }} />
-
           <p style={{ fontSize: "11px", color: "#C4922A", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "18px" }}>
             How this works
           </p>
           <p style={{ fontSize: "19px", lineHeight: "1.85", marginBottom: "40px" }}>
             The responses in this tool are generated by AI, trained on my voice, my framework, and 49 years of lived experience as a Black adoptee raised in a white family. I did not type each answer by hand. The perspective behind every response is mine. The technology makes it available to you at any hour of the day, for any situation you are facing. I believe in being honest about that, because the parents who come here deserve honesty above everything else.
           </p>
-
           <button
             onClick={onBack}
             style={{
@@ -542,13 +554,12 @@ function AboutPage({ onBack }: { onBack: () => void }) {
           >
             Get Guidance
           </button>
-
           <div style={{ borderTop: "1px solid rgba(196,146,42,0.25)", paddingTop: "28px", display: "flex", flexDirection: "column", gap: "14px" }}>
             <a href="https://beyondthemomentadoptionstudio.com" style={{ color: "#C4922A", fontSize: "16px" }}>
               beyondthemomentadoptionstudio.com &rarr;
             </a>
             <a href="https://beyondthemomentadoptionstudio.com/#community" style={{ color: "#C4922A", fontSize: "15px", lineHeight: "1.6" }}>
-              Free guide: 7 Conversations Every White Parent Must Have With Their Black Child &rarr;
+              Free guide: The First 5 Signs Your Black Child Is Carrying Something They Haven&rsquo;t Told You &rarr;
             </a>
           </div>
         </div>
