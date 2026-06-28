@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import nodemailer from "nodemailer";
 
 const PUB_ID = "pub_7befc2c3-f445-4431-9825-42c11df4fa5e";
 
@@ -11,48 +10,55 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 1. Subscribe to Beehiiv
   try {
-    await fetch(`https://api.beehiiv.com/v2/publications/${PUB_ID}/subscriptions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
-      },
-      body: JSON.stringify({
-        email,
-        reactivate_existing: false,
-        send_welcome_email: true,
-        utm_source: "ask-the-adoptee-app",
-        utm_medium: "app",
-      }),
-    });
+    const beehiivKey = process.env.BEEHIIV_API_KEY;
+    if (beehiivKey) {
+      await fetch(`https://api.beehiiv.com/v2/publications/${PUB_ID}/subscriptions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${beehiivKey}`,
+        },
+        body: JSON.stringify({
+          email,
+          reactivate_existing: false,
+          send_welcome_email: true,
+          utm_source: "ask-the-adoptee-app",
+          utm_medium: "app",
+        }),
+      });
+    }
   } catch (e) {
     console.error("Beehiiv subscribe error:", e);
   }
 
-  // 2. Email the response back to them
-  if (response && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  // 2. Email the response via Resend (pure fetch — no npm package needed)
+  if (response && process.env.RESEND_API_KEY) {
     try {
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      });
+      const html = `
+        <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#2C1810;color:#F5EFE8;padding:40px 32px;border-radius:8px;">
+          <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#C4922A;margin:0 0 24px;">Ask the Adoptee &mdash; Beyond the Moment Studio</p>
+          <p style="font-size:17px;line-height:1.8;margin:0 0 32px;">${response
+            .replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#C4922A;">$1</strong>')
+            .replace(/\n/g, "<br/>")}</p>
+          <hr style="border:none;border-top:1px solid rgba(196,146,42,0.3);margin:32px 0;"/>
+          <p style="font-size:13px;color:rgba(245,239,232,0.5);margin:0 0 6px;">Michael Gaither &mdash; Beyond the Moment Adoption Studio</p>
+          <a href="https://payhip.com/b/hD5Qj" style="color:#C4922A;font-size:14px;font-weight:bold;text-decoration:none;">
+            Get the full guide &mdash; Raising a Black Child in a White Family ($17) &rarr;
+          </a>
+        </div>`;
 
-      const plain = response.replace(/\*\*([^*]+)\*\*/g, "$1");
-
-      await transporter.sendMail({
-        from: `"Michael Gaither — Ask the Adoptee" <${process.env.SMTP_USER}>`,
-        to: email,
-        subject: "Your guidance from Ask the Adoptee",
-        text: `Here is the guidance you received from Ask the Adoptee:\n\n${plain}\n\n---\nMichael Gaither\nBeyond the Moment Adoption Studio\nbeyondthemomentadoptionstudio.com`,
-        html: `<div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#2C1810;color:#F5EFE8;padding:40px 32px;">
-          <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#C4922A;margin-bottom:24px;">Ask the Adoptee &mdash; Beyond the Moment Studio</p>
-          <p style="font-size:18px;line-height:1.8;margin-bottom:32px;">${response.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#C4922A;">$1</strong>').replace(/\n/g, '<br/>')}</p>
-          <hr style="border-color:rgba(196,146,42,0.3);margin:32px 0;"/>
-          <p style="font-size:14px;color:rgba(245,239,232,0.5);">Michael Gaither &mdash; Beyond the Moment Adoption Studio</p>
-          <a href="https://beyondthemomentadoptionstudio.com" style="color:#C4922A;font-size:14px;">beyondthemomentadoptionstudio.com</a>
-        </div>`,
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Michael Gaither <hello@beyondthemomentadoptionstudio.com>",
+          to: [email],
+          subject: "Your guidance from Ask the Adoptee",
+          html,
+        }),
       });
     } catch (e) {
       console.error("Email send error:", e);
