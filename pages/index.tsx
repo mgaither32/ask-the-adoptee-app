@@ -121,7 +121,7 @@ export default function Home() {
   }, [messages, loading]);
 
   const send = async () => {
-    if (!input.trim() || loading || questionCount >= 6) return;
+    if (!input.trim() || loading || questionCount >= 3) return;
     const userMsg = { role: "user" as const, content: input.trim() };
     const next = [...messages, userMsg];
     setMessages([...next, { role: "assistant" as const, content: "" }]);
