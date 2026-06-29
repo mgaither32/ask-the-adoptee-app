@@ -202,7 +202,8 @@ export default function Home() {
   if (showAbout) return <AboutPage onBack={() => setShowAbout(false)} />;
 
   return (
-    <Head>
+   <>
+     <Head>
       <title>Ask the Adoptee</title>
       <meta name="description" content="Honest answers for white parents raising Black children — from a Black adoptee who lived the experience." />
       <meta property="og:title" content="Ask the Adoptee" />
@@ -651,6 +652,7 @@ export default function Home() {
         </form>
       </div>
     </div>
+    </>
   );
 }
 
