@@ -4,14 +4,20 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <meta name="application-name" content="Ask the Adoptee" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Ask the Adoptee" />
-        <meta name="theme-color" content="#2C1810" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta charSet="utf-8" />
+        <meta name="description" content="Honest answers for white parents raising Black children — from a Black adoptee who lived the experience." />
+        <meta property="og:title" content="Ask the Adoptee" />
+        <meta property="og:description" content="Honest answers for white parents raising Black children — from a Black adoptee who lived the experience." />
+        <meta property="og:image" content="https://ask-the-adoptee-app.vercel.app/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://ask-the-adoptee-app.vercel.app" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Ask the Adoptee" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ask the Adoptee" />
+        <meta name="twitter:description" content="Honest answers for white parents raising Black children — from a Black adoptee who lived the experience." />
+        <meta name="twitter:image" content="https://ask-the-adoptee-app.vercel.app/og-image.png" />
       </Head>
       <body>
         <Main />
